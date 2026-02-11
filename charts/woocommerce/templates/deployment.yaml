@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "woocommerce.fullname" . }}-wordpress
+  labels:
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+        - name: wordpress
+          image: wordpress:6.4-apache
+          ports:
+            - containerPort: 80
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: "{{ include "woocommerce.fullname" . }}-mysql-0.{{ include "woocommerce.fullname" . }}-mysql:3306"
+            - name: WORDPRESS_DB_NAME
+              value: "{{ .Values.mysql.database }}"
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "woocommerce.fullname" . }}-secrets
+                  key: mysql-user
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "woocommerce.fullname" . }}-secrets
+                  key: mysql-password
+       

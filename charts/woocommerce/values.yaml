@@ -1,0 +1,5 @@
+mysql:
+  database: woocommerce
+  user: wpuser
+  password: wppassword
+  rootPassword: rootpassword

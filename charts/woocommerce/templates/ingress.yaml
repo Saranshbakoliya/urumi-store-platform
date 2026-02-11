@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "woocommerce.fullname" . }}-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ include "woocommerce.fullname" . }}.localtest.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "woocommerce.fullname" . }}-wordpress
+                port:
+                  number: 80
