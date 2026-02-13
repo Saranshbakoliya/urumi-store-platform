@@ -5,7 +5,7 @@ metadata:
   labels:
     app: wordpress
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: wordpress
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: wordpress
-          image: wordpress:6.4-apache
+          image: {{ .Values.wordpress.image }}
           ports:
             - containerPort: 80
           env:
@@ -34,4 +34,25 @@ spec:
                 secretKeyRef:
                   name: {{ include "woocommerce.fullname" . }}-secrets
                   key: mysql-password
-       
+
+          resources:
+            requests:
+              cpu: {{ .Values.wordpress.resources.requests.cpu }}
+              memory: {{ .Values.wordpress.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.wordpress.resources.limits.cpu }}
+              memory: {{ .Values.wordpress.resources.limits.memory }}
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 20

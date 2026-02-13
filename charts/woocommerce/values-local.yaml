@@ -1,0 +1,47 @@
+# ================================
+# Local Development Values
+# ================================
+
+replicaCount: 1
+
+wordpress:
+  image:
+    repository: wordpress
+    tag: "6.4-apache"
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+mysql:
+  image:
+    repository: mysql
+    tag: "8.0"
+
+  database: woocommerce
+
+  persistence:
+    enabled: true
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  host: store-test-woocommerce.localtest.me
+
+secrets:
+  mysqlUser: wpuser
+  mysqlPassword: wppassword
+  mysqlRootPassword: rootpassword
